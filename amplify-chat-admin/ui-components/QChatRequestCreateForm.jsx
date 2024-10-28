@@ -195,6 +195,7 @@ export default function QChatRequestCreateForm(props) {
     guardrails: "",
     acceptTnC: false,
     regionQ: "",
+    userEmail: "",
   };
   const [customer, setCustomer] = React.useState(initialValues.customer);
   const [website, setWebsite] = React.useState(initialValues.website);
@@ -213,6 +214,7 @@ export default function QChatRequestCreateForm(props) {
   const [guardrails, setGuardrails] = React.useState(initialValues.guardrails);
   const [acceptTnC, setAcceptTnC] = React.useState(initialValues.acceptTnC);
   const [regionQ, setRegionQ] = React.useState(initialValues.regionQ);
+  const [userEmail, setUserEmail] = React.useState(initialValues.userEmail);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     setCustomer(initialValues.customer);
@@ -295,6 +297,7 @@ export default function QChatRequestCreateForm(props) {
           guardrails,
           acceptTnC,
           regionQ,
+          userEmail,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -329,6 +332,7 @@ export default function QChatRequestCreateForm(props) {
             variables: {
               input: {
                 ...modelFields,
+                userEmail: userEmail,
               },
             },
           });
@@ -491,6 +495,39 @@ export default function QChatRequestCreateForm(props) {
         hasError={errors.acceptTnC?.hasError}
         {...getOverrideProps(overrides, "acceptTnC")}
       ></SwitchField>
+      <TextField
+        label="User Email"
+        isRequired={true}
+        isReadOnly={false}
+        value={userEmail}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              customer,
+              website,
+              additional_sites,
+              chatbotname,
+              chatbot_logo_url,
+              initial_text,
+              guardrails,
+              acceptTnC,
+              regionQ,
+              userEmail: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.userEmail ?? value;
+          }
+          if (errors.userEmail?.hasError) {
+            runValidationTasks("userEmail", value);
+          }
+          setUserEmail(value);
+        }}
+        onBlur={() => runValidationTasks("userEmail", userEmail)}
+        errorMessage={errors.userEmail?.errorMessage}
+        hasError={errors.userEmail?.hasError}
+        {...getOverrideProps(overrides, "userEmail")}
+      ></TextField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}
