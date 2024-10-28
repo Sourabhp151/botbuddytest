@@ -316,7 +316,41 @@ export default function QChatRequestCreateForm(props) {
           }, []),
         );
         if (validationResponses.some((r) => r.hasError)) {
+          setErrors(
+            validationResponses.reduce(
+              (accum, fieldValidationResponse) => ({
+                ...accum,
+                [fieldValidationResponse.name]: fieldValidationResponse,
+              }),
+              {},
+            ),
+          );
           return;
+        }
+        setErrors({});
+        try {
+          if (onSubmit) {
+            modelFields = onSubmit(modelFields);
+          }
+          const client = generateClient();
+          await client.graphql({
+            query: createQChatRequest.replaceAll("__typename", ""),
+            variables: {
+              input: modelFields,
+            },
+          });
+          if (onSuccess) {
+            onSuccess(result.data.createQChatRequest);
+          }
+          if (clearOnSuccess) {
+            resetStateValues();
+          }
+        } catch (err) {
+          console.error("Error submitting form:", err);
+          if (onError) {
+            const messages = err.errors ? err.errors.map((e) => e.message).join("\n") : err.message;
+            onError(modelFields, messages);
+          }
         }
         if (onSubmit) {
           modelFields = onSubmit(modelFields);
