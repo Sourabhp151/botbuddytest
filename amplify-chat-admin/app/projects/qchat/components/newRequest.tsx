@@ -17,9 +17,13 @@ export default function NewRequest({
 
   const { emailId } = useUser();
 
+  console.log("NewRequest: handleSubmission function", handleSubmission);
   return (
     <QChatRequestCreateForm
-      onSuccess={(payload) => handleSubmission(payload)}
+      onSuccess={(payload) => {
+        console.log("QChatRequestCreateForm onSuccess called with payload:", payload);
+        handleSubmission(payload);
+      }}
       onValidate={{
         customer: (value, validationResponse) => {
           var myRegEx = /[^a-z\d-]/i;

@@ -287,6 +287,7 @@ export default function QChatRequestCreateForm(props) {
       padding="20px"
       onSubmit={async (event) => {
         event.preventDefault();
+        console.log("Form submission started");
         let modelFields = {
           customer,
           website,
@@ -299,6 +300,7 @@ export default function QChatRequestCreateForm(props) {
           regionQ,
           userEmail,
         };
+        console.log("Initial modelFields:", modelFields);
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
             if (Array.isArray(modelFields[fieldName])) {
@@ -315,7 +317,9 @@ export default function QChatRequestCreateForm(props) {
             return promises;
           }, []),
         );
+        console.log("Validation responses:", validationResponses);
         if (validationResponses.some((r) => r.hasError)) {
+          console.log("Validation errors found");
           setErrors(
             validationResponses.reduce(
               (accum, fieldValidationResponse) => ({
@@ -333,6 +337,7 @@ export default function QChatRequestCreateForm(props) {
           console.log("Attempting to submit form", modelFields);
           if (onSubmit) {
             modelFields = onSubmit(modelFields);
+            console.log("After onSubmit:", modelFields);
           }
           const client = generateClient();
           console.log("Client generated");
@@ -342,19 +347,27 @@ export default function QChatRequestCreateForm(props) {
             }
           });
           console.log("Cleaned modelFields:", modelFields);
-          const result = await client.graphql({
-            query: createQChatRequest.replaceAll("__typename", ""),
-            variables: {
-              input: {
-                ...modelFields,
-                userEmail: userEmail,
+          console.log("Executing GraphQL mutation");
+          try {
+            const result = await client.graphql({
+              query: createQChatRequest.replaceAll("__typename", ""),
+              variables: {
+                input: {
+                  ...modelFields,
+                  userEmail: userEmail,
+                },
               },
-            },
-          });
-          console.log("GraphQL mutation result:", result);
+            });
+            console.log("GraphQL mutation result:", result);
+          } catch (graphqlError) {
+            console.error("GraphQL mutation error:", graphqlError);
+            throw graphqlError;
+          }
           if (onSuccess) {
             console.log("Calling onSuccess callback");
             onSuccess(result.data.createQChatRequest);
+          } else {
+            console.log("onSuccess callback not provided");
           }
           if (clearOnSuccess) {
             console.log("Clearing form values");
@@ -367,6 +380,8 @@ export default function QChatRequestCreateForm(props) {
             console.log("Calling onError callback with messages:", messages);
             onError(modelFields, messages);
           }
+          // Log the full error object for debugging
+          console.log("Full error object:", JSON.stringify(err, null, 2));
         }
       }}
       {...getOverrideProps(overrides, "QChatRequestCreateForm")}

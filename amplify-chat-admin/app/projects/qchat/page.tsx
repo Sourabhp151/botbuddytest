@@ -25,6 +25,7 @@ export default function Page() {
   const queryClient = useQueryClient();
 
   const handleSubmission = async function (payload: any) {
+    console.log("handleSubmission called with payload:", payload);
     const id = payload.id;
 
     setIsSubmitting(true);
@@ -34,8 +35,10 @@ export default function Page() {
 
     //Trigger Workflow API
     try {
+      console.log("Fetching auth session");
       const { accessToken, idToken } = (await fetchAuthSession()).tokens ?? {};
       const endpoint_url = config.custom.apiExecuteStepFnEndpoint;
+      console.log("Endpoint URL:", endpoint_url);
 
       setProgress(60);
       setProgressMessage([
@@ -51,12 +54,16 @@ export default function Page() {
         },
         body: JSON.stringify(payload),
       };
+      console.log("Request options:", requestOptions);
 
+      console.log("Fetching createBRApp");
       const response = await fetch(
         `${endpoint_url}createBRApp`,
         requestOptions
       );
+      console.log("Response status:", response.status);
       const data = await response.json();
+      console.log("Response data:", data);
       setProgress(90);
       setProgressMessage(["Chatbot created successfully", ...progressMessage]);
       const applicationIdQ = data.applicationIdQ;
@@ -65,12 +72,14 @@ export default function Page() {
 
       const client = generateClient<Schema>();
 
+      console.log("Updating QChatRequest");
       const respValue = await client.models.QChatRequest.update({
         qchatform_status: "Completed",
         applicationIdQ: applicationIdQ,
         token: redirectURL ? redirectURL : token,
         id: id,
       });
+      console.log("Update response:", respValue);
 
       setProgress(100);
       setProgressMessage(["Updated Completion Status.", ...progressMessage]);
@@ -82,7 +91,7 @@ export default function Page() {
       setIsCreatingForm(false);
       setIsSubmitting(false);
     } catch (err) {
-      console.log(err);
+      console.error("Error in handleSubmission:", err);
       toast("❌ An Error has occurred: " + err);
       setProgress(0);
       setProgressMessage([]);
@@ -108,7 +117,7 @@ export default function Page() {
   return (
     <main>
       <div className="hidden md:block sm:text-lg md:text-2xl text-bold bg-blue-600 text-white p-8 rounded-lg w-full mb-4 sm:mb-2 sm:p-2">
-        BotBuddy - Smart, Fast, and Always Ready to Assist!
+        White-labeled Chatbots powered by Amazon Bedrock and Kendra!
       </div>
       {/* <Button onClick={() => handleSubmission({ dummy: "data" })}>
         TESTING
