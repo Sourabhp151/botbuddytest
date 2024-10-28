@@ -328,39 +328,20 @@ export default function QChatRequestCreateForm(props) {
           return;
         }
         setErrors({});
+        console.log("Starting form submission process");
         try {
+          console.log("Attempting to submit form", modelFields);
           if (onSubmit) {
             modelFields = onSubmit(modelFields);
           }
           const client = generateClient();
-          await client.graphql({
-            query: createQChatRequest.replaceAll("__typename", ""),
-            variables: {
-              input: modelFields,
-            },
-          });
-          if (onSuccess) {
-            onSuccess(result.data.createQChatRequest);
-          }
-          if (clearOnSuccess) {
-            resetStateValues();
-          }
-        } catch (err) {
-          console.error("Error submitting form:", err);
-          if (onError) {
-            const messages = err.errors ? err.errors.map((e) => e.message).join("\n") : err.message;
-            onError(modelFields, messages);
-          }
-        }
-        if (onSubmit) {
-          modelFields = onSubmit(modelFields);
-        }
-        try {
+          console.log("Client generated");
           Object.entries(modelFields).forEach(([key, value]) => {
             if (typeof value === "string" && value === "") {
               modelFields[key] = null;
             }
           });
+          console.log("Cleaned modelFields:", modelFields);
           const result = await client.graphql({
             query: createQChatRequest.replaceAll("__typename", ""),
             variables: {
@@ -370,16 +351,20 @@ export default function QChatRequestCreateForm(props) {
               },
             },
           });
+          console.log("GraphQL mutation result:", result);
           if (onSuccess) {
-            //onSuccess(modelFields);
+            console.log("Calling onSuccess callback");
             onSuccess(result.data.createQChatRequest);
           }
           if (clearOnSuccess) {
+            console.log("Clearing form values");
             resetStateValues();
           }
         } catch (err) {
+          console.error("Error submitting form:", err);
           if (onError) {
-            const messages = err.errors.map((e) => e.message).join("\n");
+            const messages = err.errors ? err.errors.map((e) => e.message).join("\n") : err.message;
+            console.log("Calling onError callback with messages:", messages);
             onError(modelFields, messages);
           }
         }
