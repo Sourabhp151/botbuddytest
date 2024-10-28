@@ -71,7 +71,11 @@ export default function Compose({
           )}
         </button>
       )}
-      <form style={{ display: "flex", gap: "8px", width: "100%" }} onSubmit={(event) => onSubmitUserMessage(event)}>
+      <form style={{ display: "flex", gap: "8px", width: "100%" }} onSubmit={(event) => {
+  event.preventDefault();
+  console.log("Form submitted");
+  onSubmitUserMessage(event);
+}}>
         <input
           type="text"
           name="Query Field"
