@@ -106,7 +106,9 @@ export default function Chat({
   async function handleSubmitUserMessage(event: FormEvent<HTMLFormElement>) {
     console.log("handleSubmitUserMessage ", composeValue)
 
-    event.preventDefault()
+    if (event instanceof Object) {
+      event.preventDefault()
+    }
 
     let defLang = translationLanguage === "" ? "en" : translationLanguage
 

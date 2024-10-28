@@ -42,6 +42,7 @@ export default function QChatListRequests({
   const client = generateClient<Schema>();
   const queryClient = useQueryClient();
   const { isAdmin, emailId } = useUser();
+  const [userSpecificView, setUserSpecificView] = useState(!isAdmin);
   const [isProcessing, setIsProcessing] = useState(false);
 
   const [totalIndexedPages, setTotalIndexedPages] = useState(0);
@@ -51,7 +52,7 @@ export default function QChatListRequests({
     queryFn: () =>
       client.models.QChatRequest.list()
         .then((list) => list.data)
-        .then((list) => list.filter((item) => item.bot_status != "Disabled"))
+        .then((list) => list.filter((item) => item.bot_status != "Disabled" && (userSpecificView ? item.requester_email === emailId : true)))
         .then((list) => sortByCreationDate(list)),
   });
 
@@ -169,11 +170,21 @@ export default function QChatListRequests({
         {" "}
         + Create New Request ☞
       </Button>
-      <div className="flex">
-        <div className="flex text-xl w-1/2">List of Submitted Forms</div>
-        <div className="text-md w-1/2 flex grow right">
-          Ongoing PoCs: {submissions?.length}, Indexing Consumption:{" "}
-          {totalIndexedPages ? Math.round(totalIndexedPages) : 0}k / 100K
+      <div className="flex justify-between items-center mb-4">
+        <div className="flex text-xl">List of Submitted Forms</div>
+        <div className="flex items-center">
+          {isAdmin && (
+            <Button
+              className="mr-4"
+              onClick={() => setUserSpecificView(!userSpecificView)}
+            >
+              {userSpecificView ? "Show All Requests" : "Show My Requests"}
+            </Button>
+          )}
+          <div className="text-md">
+            Ongoing PoCs: {submissions?.length}, Indexing Consumption:{" "}
+            {totalIndexedPages ? Math.round(totalIndexedPages) : 0}k / 100K
+          </div>
         </div>
       </div>
       <div className="">
