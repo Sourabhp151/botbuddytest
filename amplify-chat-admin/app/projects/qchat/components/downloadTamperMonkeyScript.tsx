@@ -33,7 +33,7 @@ export default async function DownloadTamperMonekyScript({
         'use strict';
 	let iframe = document.createElement('iframe');
         // Your code here...
-        var my_awesome_script = document.createElement('script');
+        //var my_awesome_script = document.createElement('script');
         //my_awesome_script.setAttribute("id", "QChatparams")
         iframe.src = '##URL##'
 		// Set iframe styles (optional)
@@ -44,7 +44,7 @@ export default async function DownloadTamperMonekyScript({
 		iframe.style.height = '480px';
 		iframe.style.border = 'none';
 		iframe.style.zIndex = '99999';
-        document.head.appendChild(iframe);
+        document.body.appendChild(iframe);
     })();`;
 
   const downloadScript = async () => {
