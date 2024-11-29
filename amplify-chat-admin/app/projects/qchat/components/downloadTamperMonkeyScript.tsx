@@ -102,7 +102,7 @@ async function getRedirectUrl(url) {
 
 function formatURL(url) {
   //Retrieve the URL hostname, queryparams and add serve.js as path before '?'
-  const formattedUrl = new URL(url);formattedUrl
-  const parsedUrl = `${parsedUrl.origin}${parsedUrl.pathname}serve.js${parsedUrl.search}`;
+  const parsedUrl = new URL(url);formattedUrl
+  const formattedUrl = `${parsedUrl.origin}${parsedUrl.pathname}${parsedUrl.search}`;
   return formattedUrl;
 }
