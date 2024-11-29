@@ -32,9 +32,10 @@ export default async function DownloadTamperMonekyScript({
     (function() {
         'use strict';
 	let iframe = document.createElement('iframe');
-        let originalUrl = '##URL##';
-	let modifiedUrl = originalUrl.replace('/serve.js?', '/?');
-	iframe.src = modifiedUrl;
+        // Your code here...
+        //var my_awesome_script = document.createElement('script');
+        //my_awesome_script.setAttribute("id", "QChatparams")
+        iframe.src = '##URL##'
 		// Set iframe styles (optional)
 		iframe.style.position = 'fixed';
 		iframe.style.bottom = '0';
@@ -101,7 +102,7 @@ async function getRedirectUrl(url) {
 
 function formatURL(url) {
   //Retrieve the URL hostname, queryparams and add serve.js as path before '?'
-  const parsedUrl = new URL(url);
-  const formattedUrl = `${parsedUrl.origin}${parsedUrl.pathname}serve.js${parsedUrl.search}`;
+  const formattedUrl = new URL(url);formattedUrl
+  const parsedUrl = `${parsedUrl.origin}${parsedUrl.pathname}serve.js${parsedUrl.search}`;
   return formattedUrl;
 }
