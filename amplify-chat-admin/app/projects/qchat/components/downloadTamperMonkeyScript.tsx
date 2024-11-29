@@ -32,10 +32,9 @@ export default async function DownloadTamperMonekyScript({
     (function() {
         'use strict';
 	let iframe = document.createElement('iframe');
-        // Your code here...
-        //var my_awesome_script = document.createElement('script');
-        //my_awesome_script.setAttribute("id", "QChatparams")
-        iframe.src = '##URL##'
+        let originalUrl = '##URL##';
+	let modifiedUrl = originalUrl.replace('/serve.js?', '/?');
+	iframe.src = modifiedUrl;
 		// Set iframe styles (optional)
 		iframe.style.position = 'fixed';
 		iframe.style.bottom = '0';
