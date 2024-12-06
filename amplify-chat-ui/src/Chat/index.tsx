@@ -348,7 +348,6 @@ export default function Chat({
         onClearButtonClick={handleClearConversation}
         isMobile={isMobile}
         onCollapseButtonClick={handleCollapseButtonClick}
-        setComposeValue={setComposeValue}
       />
       <div className={styles.content}>
         {messages.map((message, index) => {

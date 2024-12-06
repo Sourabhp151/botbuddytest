@@ -9,14 +9,12 @@ export default function Header({
   configuration,
   onClearButtonClick,
   isMobile,
-  onCollapseButtonClick,
-  setComposeValue,
+  onCollapseButtonClick
 }: {
   configuration: Configuration
   onClearButtonClick: () => void
   isMobile: boolean
   onCollapseButtonClick: () => void
-  setComposeValue: (value: string) => void
 }) {
   return (
     <div className={styles.header}>
