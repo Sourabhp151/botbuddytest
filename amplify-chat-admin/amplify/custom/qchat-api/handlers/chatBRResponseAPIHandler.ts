@@ -115,12 +115,22 @@ async function chat(userMsg: string, decodedToken: any) {
   let messageId = '';
   let qnaHistory = '';
   let nextQuery = '';
+  
+  // Ensure the user's token contains their authorized data source ID
+  if (!decodedToken.dataSourceId) {
+    throw new Error("No authorized data source found for this user");
+  }
 
   try {
     //region = "ap-south-1";
     const msg = JSON.parse(userMsg);
     const query = msg.userMessage;
     conversationId = msg.conversationId;
+    
+    // Validate the query is not empty
+    if (!query || query.trim() === '') {
+      throw new Error("Empty question provided");
+    }
 
     if (conversationId) {
       const conversationHistory = await queryConversastion(conversationId);
@@ -132,7 +142,10 @@ Response: ${item.response}`)
 
     }
 
-    const handleGreetingsPrompt = llmPrompt("FIRST_PROMPT", decodedToken.customer, decodedToken.chatbotName, qnaHistory, query, "", "")
+    // Query Kendra with the user's authorized data source
+const kendraResults = await retrieveKendraSearch(query, decodedToken.dataSourceId);
+
+const handleGreetingsPrompt = llmPrompt("FIRST_PROMPT", decodedToken.customer, decodedToken.chatbotName, qnaHistory, query, "", kendraResults)
 
     const respLLM = await executeBedrockAPI(handleGreetingsPrompt)
 
@@ -402,6 +415,14 @@ function extractFirstJSON(outputStr: string) {
 }
 
 function llmPrompt(type: string, company: string, chatbotName: string, qnaHistory: string, query: string, nextQuery: string, kendraRetrieveResponse: string,) {
+  // If no Kendra results found, return appropriate message
+  if (!kendraRetrieveResponse || kendraRetrieveResponse.trim() === '') {
+    return `{
+      "response": "I could not find any relevant information from your website to answer this question. Please try asking something related to the content you have crawled.",
+      "nextQuery": "",
+      "sources": []
+    }`;
+  }
   let prompt = "";
   switch (type) {
     case "FIRST_PROMPT":
