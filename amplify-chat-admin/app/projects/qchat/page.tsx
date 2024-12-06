@@ -67,12 +67,15 @@ export default function Page() {
       const applicationIdQ = data.applicationIdQ;
       const token = data.token;
       const redirectURL = data.publicURL;
+      
+      // Ensure we have a valid token value
+      const finalToken: string = typeof redirectURL === 'string' ? redirectURL : token;
 
       const updateInput: QChatRequestUpdateInput = {
         id,
         qchatform_status: "Completed" as const,
         applicationIdQ,
-        token: redirectURL || token,
+        token: finalToken,
       };
       const respValue = await client.models.QChatRequest.update(updateInput);
 
