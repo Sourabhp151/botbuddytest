@@ -13,6 +13,7 @@ export default function PopupButton({
   setIsCollapsed,
   hasInteracted,
   setHasInteracted,
+  setComposeValue,
 }: {
   configuration: Configuration
   qchatAPI: QchatApi
