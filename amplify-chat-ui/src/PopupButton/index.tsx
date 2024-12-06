@@ -2,6 +2,7 @@ import { Configuration } from "../_interfaces"
 import QchatApi from "../_lib/api"
 import styles from "./styles.module.css"
 import Chevron from "/src/_images/popup/chevron.svg?react"
+import { suggestedQuestions } from "./suggested-questions"
 //import DefaultIcon from "/src/_images/popup/icon-default.svg?react"
 import MessageCloseIcon from "/src/_images/popup/message-close.svg?react"
 import { useEffect } from "react"
@@ -28,49 +29,75 @@ export default function PopupButton({
   }, [])
 
   function handleClick(): void {
+    const isOpening = isCollapsed;
     setIsCollapsed(!isCollapsed)
-    setHasInteracted(true)
-    localStorage.setItem(`qchat-has-interacted-${configuration.token}`, "true")
+    if (isOpening) {
+      setHasInteracted(true)
+      localStorage.setItem(`qchat-has-interacted-${configuration.token}`, "true")
+    }
     qchatAPI.logEvent({ eventType: "POPUP_CALLED" })
   }
 
   // Removed local setComposeValue function as it's now passed as a prop
 
   function handleMessageCloseClick(): void {
-    setHasInteracted(true)
-    localStorage.setItem(`qchat-has-interacted-${configuration.token}`, "true")
+    // Don't mark as interacted until actual chat interaction
+    // Just hide the popup message
   }
 
   return (
     <>
-      <div className={styles.buttonsContainer}>
-        <button 
-          className={styles.quickActionButton}
-          onClick={() => {
-            setComposeValue("What is address?");
-            handleClick();
-          }}
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-          </svg>
-          <span>Address</span>
-        </button>
-        
-        <button 
-          className={styles.quickActionButton}
-          onClick={() => {
-            setComposeValue("Tell me about us");
-            handleClick();
-          }}
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-          </svg>
-          <span>About Us</span>
-        </button>
-      </div>
+      {isCollapsed && !hasInteracted && <div style={{
+        position: 'fixed',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '8px',
+        bottom: configuration.bottomIndent + 80,
+        right: configuration.rightIndent,
+        background: 'white',
+        padding: '12px',
+        borderRadius: '12px',
+        boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
+        width: '280px',
+        zIndex: configuration.zIndex + 1,
+      }}>
+        {suggestedQuestions.map((question, index) => (
+          <button 
+            key={index}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              padding: '8px 16px',
+              borderRadius: '8px',
+              backgroundColor: '#f3f4f6',
+              color: '#374151',
+              fontSize: '14px',
+              fontWeight: 500,
+              border: 'none',
+              cursor: 'pointer',
+              transition: 'background-color 0.2s',
+              width: '100%',
+              textAlign: 'left'
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.backgroundColor = '#e5e7eb';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.backgroundColor = '#f3f4f6';
+            }}
+            onClick={() => {
+              setComposeValue(question.text);
+              handleClick();
+            }}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={question.icon} />
+            </svg>
+            <span>{question.text}</span>
+          </button>
+        ))}
+      </div>}
       <button
         className={styles.button}
         style={{
