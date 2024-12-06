@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
-import type { Schema } from "@/amplify/data/resource";
+import React, { useState } from "react";
+import type { QChatSchema, QChatClient, QChatRequestUpdateInput, QChatPayload, APIResponse } from "./types";
 import QChatListRequests from "./components/listRequests";
 import { Button } from "@/components/ui/button";
 import { useQueryClient } from "@tanstack/react-query";
 import { Progress } from "@/components/ui/progress";
+// Progress component has its own internal types
 
 import NewRequest from "./components/newRequest";
 import config from "@/amplify_outputs.json";
@@ -13,18 +14,22 @@ import { fetchAuthSession } from "aws-amplify/auth";
 import { generateClient } from "aws-amplify/data";
 import { toast } from "sonner";
 
-// generate your data client using the Schema from your backend
-//const client = generateClient<Schema>();
+// The client will be instantiated inside the component using useRef
+
+
+
+
 
 export default function Page() {
-  const [isCreatingForm, setIsCreatingForm] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const [progressMessage, setProgressMessage] = useState([""]);
+  const client = React.useRef(generateClient<QChatSchema>()).current;
+  const [isCreatingForm, setIsCreatingForm] = useState<boolean>(false);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [progress, setProgress] = useState<number>(0);
+  const [progressMessage, setProgressMessage] = useState<string[]>([""]);
 
   const queryClient = useQueryClient();
 
-  const handleSubmission = async function (payload: any) {
+  const handleSubmission = async function (payload: QChatPayload) {
     const id = payload.id;
 
     setIsSubmitting(true);
@@ -43,7 +48,7 @@ export default function Page() {
         ...progressMessage,
       ]);
 
-      const requestOptions: any = {
+      const requestOptions = {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -56,21 +61,20 @@ export default function Page() {
         `${endpoint_url}createBRApp`,
         requestOptions
       );
-      const data = await response.json();
+      const data = await response.json() as APIResponse;
       setProgress(90);
       setProgressMessage(["Chatbot created successfully", ...progressMessage]);
       const applicationIdQ = data.applicationIdQ;
       const token = data.token;
       const redirectURL = data.publicURL;
 
-      const client = generateClient<Schema>();
-
-      const respValue = await client.models.QChatRequest.update({
-        qchatform_status: "Completed",
-        applicationIdQ: applicationIdQ,
-        token: redirectURL ? redirectURL : token,
-        id: id,
-      });
+      const updateInput: QChatRequestUpdateInput = {
+        id,
+        qchatform_status: "Completed" as const,
+        applicationIdQ,
+        token: redirectURL || token,
+      };
+      const respValue = await client.models.QChatRequest.update(updateInput);
 
       setProgress(100);
       setProgressMessage(["Updated Completion Status.", ...progressMessage]);
@@ -91,15 +95,15 @@ export default function Page() {
     }
   };
 
-  const handleOnCancel = async function () {
+  const handleOnCancel = async function (): Promise<void> {
     setIsCreatingForm(false);
   };
 
-  const handleOnSubmitForm = function (payload: any) {
+  const handleOnSubmitForm = function (payload: QChatPayload) {
     return false;
   };
 
-  const onClickTestHandler = async function () {};
+  const onClickTestHandler = async function (): Promise<void> {};
 
   const onNewFormRequest = function (): void {
     setIsSubmitting(false);
@@ -121,8 +125,9 @@ export default function Page() {
           {isSubmitting ? (
             <>
               <Progress
-                className="mt-24 ml-4 w-5/6 items-center "
+                className="mt-24 ml-4 w-5/6 items-center"
                 value={progress}
+                aria-label="Progress"
               />
               <div className="container items-center mt-12 ml-20">
                 {progressMessage.map((msg) => (
