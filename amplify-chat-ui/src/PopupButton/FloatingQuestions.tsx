@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import styles from './styles.module.css';
 
 interface FloatingQuestionsProps {
@@ -6,7 +7,7 @@ interface FloatingQuestionsProps {
 
 export default function FloatingQuestions({ onQuestionClick }: FloatingQuestionsProps) {
   const questions = [
-    "About Us",
+    "Tell me about us",
     "Company Address"
   ];
 

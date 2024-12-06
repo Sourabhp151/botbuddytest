@@ -352,6 +352,23 @@ export default function Chat({
         onCollapseButtonClick={handleCollapseButtonClick}
       />
       <div className={styles.content}>
+        {messages.length === 0 && (
+          <button
+            onClick={() => handleSubmitUserMessage({ preventDefault: () => {} } as FormEvent<HTMLFormElement>)}
+            style={{
+              padding: '10px 20px',
+              margin: '20px auto',
+              display: 'block',
+              backgroundColor: '#05a88d',
+              color: 'white',
+              border: 'none',
+              borderRadius: '8px',
+              cursor: 'pointer'
+            }}
+          >
+            Tell me about us
+          </button>
+        )}
         {messages.map((message, index) => {
           return (
             <Message
