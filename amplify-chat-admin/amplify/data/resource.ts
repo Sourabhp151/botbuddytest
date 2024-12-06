@@ -26,9 +26,9 @@ const schema = a.schema({
       requester_email: a.email(),
       applicationIdQ: a.string(),
       indexedPages: a.string(),
-      config: a.string()
+      config: a.string(),
     })
-    .authorization((allow) => [allow.authenticated()])
+    .authorization((allow) => [allow.authenticated()]),
 });
 
 export type Schema = ClientSchema<typeof schema>;
