@@ -20,6 +20,7 @@ export default function PopupButton({
   setIsCollapsed: (value: boolean) => void
   hasInteracted: boolean
   setHasInteracted: (value: boolean) => void
+  setComposeValue: (value: string) => void
 }) {
   useEffect(() => {
     qchatAPI.logEvent({ eventType: "POPUP_SEEN" })
@@ -32,10 +33,7 @@ export default function PopupButton({
     qchatAPI.logEvent({ eventType: "POPUP_CALLED" })
   }
 
-  function setComposeValue(value: string): void {
-    // This function will be implemented in the Chat component
-    console.log("Setting compose value:", value);
-  }
+  // Removed local setComposeValue function as it's now passed as a prop
 
   function handleMessageCloseClick(): void {
     setHasInteracted(true)
