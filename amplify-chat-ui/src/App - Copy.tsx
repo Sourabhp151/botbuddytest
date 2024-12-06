@@ -118,7 +118,6 @@ buttonSize: 64,
           setIsCollapsed={setIsCollapsed}
           hasInteracted={hasInteracted}
           setHasInteracted={setHasInteracted}
-          setComposeValue={setComposeValue}
         />
       )}
       {configuration.token && !isCollapsed && (
