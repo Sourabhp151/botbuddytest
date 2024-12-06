@@ -5,7 +5,7 @@ import TripleDots from "./TripleDots";
 import styles from "./styles.module.css";
 import SubmitTickIcon from "/src/_images/chat/message/feedback-submit-tick.svg?react";
 import { marked } from "marked"
-import { useEffect, useState, useRef } from "react"
+import { useEffect, useState } from "react"
 
 export default function Message({
   message,
@@ -24,17 +24,18 @@ export default function Message({
 }) {
   const [currentReaction, setCurrentReaction] = useState<ReactionType | null>(null)
 
-  const [speechSynthAPI, setSpeechSynchAPI] = useState<any>(null);
-  const audioPlayRef = useRef<HTMLAudioElement>(null);
+  /* const [speechSynthAPI, setSpeechSynchAPI] = useState<SpeechSynthesizeAPI | null>(null)
+  
+  const { isVoiceOptionEnabled, responseAudioBase64, speakerState, dispatch} = useAudio();
 
-  const handleAudioPlay = (name: string) => {
-    if (!audioPlayRef.current) {
-      const audio = new Audio();
-      const utterance = new SpeechSynthesisUtterance(message.content);
-      utterance.rate = 1.25;
-      window.speechSynthesis.speak(utterance);
+  const audioPlayRef = useRef<HTMLAudioElement>(null)
+
+  useEffect(() => {
+    if(isVoiceOptionEnabled && !responseAudioBase64) {
+      //audioPlayRef.current.playbackRate = 1.25; // Set the desired playback rate
+      audioPlayRef.current?.play()
     }
-  };
+  }, [responseAudioBase64]) */
 
   function handleReaction(reaction: ReactionType): void {
     setCurrentReaction(reaction)
@@ -88,12 +89,11 @@ export default function Message({
               <div className={styles.messageRating}>
                 <ReactionButton reaction="LIKE" hoverColor={selectedColor} onButtonClick={handleReaction} />
                 <ReactionButton reaction="DISLIKE" hoverColor={selectedColor} onButtonClick={handleReaction} />
-                <ImageButton 
-                  name="SPEAKER" 
-                  hoverColor={selectedColor} 
+                {/* <ImageButton 
+                  name="SPEAKER" hoverColor={selectedColor} 
                   onButtonClick={handleAudioPlay}
-                  onButtonLoad={(name) => console.log('Audio button loaded:', name)}
-                />
+                  onButtonLoad={doNothing}
+                />  */}
               </div>
             ) : (
               <div className={styles.messageFeedbackThanks}>
