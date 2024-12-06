@@ -47,57 +47,7 @@ export default function PopupButton({
 
   return (
     <>
-      {isCollapsed && !hasInteracted && <div style={{
-        position: 'fixed',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '8px',
-        bottom: configuration.bottomIndent + 80,
-        right: configuration.rightIndent,
-        background: 'white',
-        padding: '12px',
-        borderRadius: '12px',
-        boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
-        width: '280px',
-        zIndex: configuration.zIndex + 1,
-      }}>
-        {suggestedQuestions.map((question, index) => (
-          <button 
-            key={index}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              padding: '8px 16px',
-              borderRadius: '8px',
-              backgroundColor: '#f3f4f6',
-              color: '#374151',
-              fontSize: '14px',
-              fontWeight: 500,
-              border: 'none',
-              cursor: 'pointer',
-              transition: 'background-color 0.2s',
-              width: '100%',
-              textAlign: 'left'
-            }}
-            onMouseOver={(e) => {
-              e.currentTarget.style.backgroundColor = '#e5e7eb';
-            }}
-            onMouseOut={(e) => {
-              e.currentTarget.style.backgroundColor = '#f3f4f6';
-            }}
-            onClick={() => {
-              setComposeValue(question.text);
-              handleClick();
-            }}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={question.icon} />
-            </svg>
-            <span>{question.text}</span>
-          </button>
-        ))}
-      </div>}
+      
       <button
         className={styles.button}
         style={{

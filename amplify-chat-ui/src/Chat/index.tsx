@@ -1,5 +1,6 @@
 //import TranslationImpl from "../_impl/bhashini/TranslationImpl";
 import { Configuration, MessageType } from "../_interfaces"
+import { suggestedQuestions } from "../PopupButton/suggested-questions"
 import QchatApi from "../_lib/api"
 import { useAudio } from "../context/useAudioContext"
 import Compose from "./Compose"
@@ -106,7 +107,9 @@ export default function Chat({
   async function handleSubmitUserMessage(event: FormEvent<HTMLFormElement>) {
     console.log("handleSubmitUserMessage ", composeValue)
 
-    event.preventDefault()
+    if (event instanceof Object) {
+      event.preventDefault()
+    }
 
     let defLang = translationLanguage === "" ? "en" : translationLanguage
 
@@ -350,20 +353,65 @@ export default function Chat({
         onCollapseButtonClick={handleCollapseButtonClick}
       />
       <div className={styles.content}>
-        {messages.map((message, index) => {
-          return (
-            <Message
-              key={index}
-              message={message}
-              selectedColor={"#" + configuration.color}
-              isFirst={index === 0}
-              isLast={messages.length - 1 === index}
-              isLoading={isMessageLoading}
-              qchatAPI={qchatAPI}
-            />
-          )
-        })}
-        <div ref={messagesEndRef} />
+          {messages.length === 1 && (
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '8px',
+              padding: '12px',
+              marginBottom: '12px'
+            }}>
+              {suggestedQuestions.map((question, index) => (
+                <button 
+                  key={index}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    padding: '8px 16px',
+                    borderRadius: '8px',
+                    backgroundColor: '#f3f4f6',
+                    color: '#374151',
+                    fontSize: '14px',
+                    fontWeight: 500,
+                    border: 'none',
+                    cursor: 'pointer',
+                    transition: 'background-color 0.2s',
+                    width: '100%',
+                    textAlign: 'left'
+                  }}
+                  onMouseOver={(e) => {
+                    e.currentTarget.style.backgroundColor = '#e5e7eb';
+                  }}
+                  onMouseOut={(e) => {
+                    e.currentTarget.style.backgroundColor = '#f3f4f6';
+                  }}
+                  onClick={() => {
+                    setComposeValue(question.text);
+                  }}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={question.icon} />
+                  </svg>
+                  <span>{question.text}</span>
+                </button>
+              ))}
+            </div>
+          )}
+          {messages.map((message, index) => {
+            return (
+              <Message
+                key={index}
+                message={message}
+                selectedColor={"#" + configuration.color}
+                isFirst={index === 0}
+                isLast={messages.length - 1 === index}
+                isLoading={isMessageLoading}
+                qchatAPI={qchatAPI}
+              />
+            )
+          })}
+          <div ref={messagesEndRef} />
       </div>
       <Compose
         configuration={configuration}
