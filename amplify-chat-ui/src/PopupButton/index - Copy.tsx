@@ -1,5 +1,4 @@
 import { Configuration } from "../_interfaces"
-import FloatingQuestions from "./FloatingQuestions"
 import QchatApi from "../_lib/api"
 import styles from "./styles.module.css"
 import Chevron from "/src/_images/popup/chevron.svg?react"
@@ -8,7 +7,6 @@ import MessageCloseIcon from "/src/_images/popup/message-close.svg?react"
 import { useEffect } from "react"
 
 export default function PopupButton({
-  setComposeValue,
   configuration,
   qchatAPI,
   isCollapsed,
@@ -17,7 +15,6 @@ export default function PopupButton({
   setHasInteracted,
 }: {
   configuration: Configuration
-  setComposeValue: (value: string) => void
   qchatAPI: QchatApi
   isCollapsed: boolean
   setIsCollapsed: (value: boolean) => void
@@ -40,14 +37,8 @@ export default function PopupButton({
     localStorage.setItem(`qchat-has-interacted-${configuration.token}`, "true")
   }
 
-  const handleQuestionClick = (question: string) => {
-    handleClick();
-    setComposeValue(question);
-  };
-
   return (
     <>
-      {isCollapsed && <FloatingQuestions onQuestionClick={handleQuestionClick} />}
       <button
         className={styles.button}
         style={{
