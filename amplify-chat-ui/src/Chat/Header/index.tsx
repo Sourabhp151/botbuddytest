@@ -9,7 +9,7 @@ export default function Header({
   configuration,
   onClearButtonClick,
   isMobile,
-  onCollapseButtonClick
+  onCollapseButtonClick,
 }: {
   configuration: Configuration
   onClearButtonClick: () => void

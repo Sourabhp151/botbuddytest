@@ -34,44 +34,6 @@
   justify-content: center;
 }
 
-.buttonsContainer {
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  bottom: 100%;
-  right: 0;
-  margin-bottom: 16px;
-}
-
-.quickActionButton {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  background-color: white;
-  border: 1px solid #e5e7eb;
-  border-radius: 20px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.quickActionButton:hover {
-  background-color: #f3f4f6;
-  transform: translateX(-4px);
-}
-
-.quickActionButton svg {
-  color: #05a88d;
-}
-
-.quickActionButton span {
-  color: #374151;
-  font-size: 14px;
-  white-space: nowrap;
-}
-
 .fadingImage {
   position: absolute;
   top: 50%;

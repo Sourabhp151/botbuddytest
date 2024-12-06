@@ -25,8 +25,8 @@ export default function App() {
   // State of Chat component live here to save it
   // during collapses
   const [searchParams, _setSearchParams] = useSearchParams()
-  const [isCollapsed, setIsCollapsed] = useState(true)
-  const [hasInteracted, setHasInteracted] = useState(false)
+  const [isCollapsed, setIsCollapsed] = useState(false)
+  const [hasInteracted, setHasInteracted] = useState(true)
   const [isMobile, setIsMobile] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
   const [messages, setMessages] = useState<MessageType[]>([])
@@ -118,7 +118,6 @@ buttonSize: 64,
           setIsCollapsed={setIsCollapsed}
           hasInteracted={hasInteracted}
           setHasInteracted={setHasInteracted}
-          setComposeValue={setComposeValue}
         />
       )}
       {configuration.token && !isCollapsed && (

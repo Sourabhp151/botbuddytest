@@ -2,7 +2,6 @@ import { Configuration } from "../_interfaces"
 import QchatApi from "../_lib/api"
 import styles from "./styles.module.css"
 import Chevron from "/src/_images/popup/chevron.svg?react"
-
 //import DefaultIcon from "/src/_images/popup/icon-default.svg?react"
 import MessageCloseIcon from "/src/_images/popup/message-close.svg?react"
 import { useEffect } from "react"
@@ -14,7 +13,7 @@ export default function PopupButton({
   setIsCollapsed,
   hasInteracted,
   setHasInteracted,
-  }: {
+}: {
   configuration: Configuration
   qchatAPI: QchatApi
   isCollapsed: boolean
@@ -27,25 +26,19 @@ export default function PopupButton({
   }, [])
 
   function handleClick(): void {
-    const isOpening = isCollapsed;
     setIsCollapsed(!isCollapsed)
-    if (isOpening) {
-      setHasInteracted(true)
-      localStorage.setItem(`qchat-has-interacted-${configuration.token}`, "true")
-    }
+    setHasInteracted(true)
+    localStorage.setItem(`qchat-has-interacted-${configuration.token}`, "true")
     qchatAPI.logEvent({ eventType: "POPUP_CALLED" })
   }
 
-  // Removed local setComposeValue function as it's now passed as a prop
-
   function handleMessageCloseClick(): void {
-    // Don't mark as interacted until actual chat interaction
-    // Just hide the popup message
+    setHasInteracted(true)
+    localStorage.setItem(`qchat-has-interacted-${configuration.token}`, "true")
   }
 
   return (
     <>
-      
       <button
         className={styles.button}
         style={{
