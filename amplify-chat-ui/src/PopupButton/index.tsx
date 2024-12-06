@@ -2,7 +2,7 @@ import { Configuration } from "../_interfaces"
 import QchatApi from "../_lib/api"
 import styles from "./styles.module.css"
 import Chevron from "/src/_images/popup/chevron.svg?react"
-import { suggestedQuestions } from "./suggested-questions"
+
 //import DefaultIcon from "/src/_images/popup/icon-default.svg?react"
 import MessageCloseIcon from "/src/_images/popup/message-close.svg?react"
 import { useEffect } from "react"
@@ -14,15 +14,13 @@ export default function PopupButton({
   setIsCollapsed,
   hasInteracted,
   setHasInteracted,
-  setComposeValue,
-}: {
+  }: {
   configuration: Configuration
   qchatAPI: QchatApi
   isCollapsed: boolean
   setIsCollapsed: (value: boolean) => void
   hasInteracted: boolean
   setHasInteracted: (value: boolean) => void
-  setComposeValue: (value: string) => void
 }) {
   useEffect(() => {
     qchatAPI.logEvent({ eventType: "POPUP_SEEN" })
