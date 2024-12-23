@@ -31,12 +31,20 @@ export default async function DownloadTamperMonekyScript({
 
     (function() {
         'use strict';
-
+	let iframe = document.createElement('iframe');
         // Your code here...
-        var my_awesome_script = document.createElement('script');
-        my_awesome_script.setAttribute("id", "QChatparams")
-        my_awesome_script.setAttribute('src','##URL##')
-        document.head.appendChild(my_awesome_script);
+        //var my_awesome_script = document.createElement('script');
+        //my_awesome_script.setAttribute("id", "QChatparams")
+        iframe.src = '##URL##';
+		// Set iframe styles (optional)
+		iframe.style.position = 'fixed';
+		iframe.style.bottom = '0';
+		iframe.style.right = '0';
+		iframe.style.width = '380px';
+		iframe.style.height = '480px';
+		iframe.style.border = 'none';
+		iframe.style.zIndex = '99999';
+        document.body.appendChild(iframe);
     })();`;
 
   const downloadScript = async () => {
@@ -95,6 +103,6 @@ async function getRedirectUrl(url) {
 function formatURL(url) {
   //Retrieve the URL hostname, queryparams and add serve.js as path before '?'
   const parsedUrl = new URL(url);
-  const formattedUrl = `${parsedUrl.origin}${parsedUrl.pathname}serve.js${parsedUrl.search}`;
+  const formattedUrl = `${parsedUrl.origin}${parsedUrl.pathname}${parsedUrl.search}`;
   return formattedUrl;
 }
