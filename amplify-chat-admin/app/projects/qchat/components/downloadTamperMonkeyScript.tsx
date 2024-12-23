@@ -7,7 +7,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { ArrowDownTrayIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
-
+ 
 export default async function DownloadTamperMonekyScript({
   domainName,
   chatbotURL,
@@ -28,22 +28,30 @@ export default async function DownloadTamperMonekyScript({
     // @icon         https://www.google.com/s2/favicons?sz=64&domain=undefined.localhost
     // @grant        none
     // ==/UserScript==
-
+ 
     (function() {
         'use strict';
-
+	let iframe = document.createElement('iframe');
         // Your code here...
-        var my_awesome_script = document.createElement('script');
-        my_awesome_script.setAttribute("id", "QChatparams")
-        my_awesome_script.setAttribute('src','##URL##')
-        document.head.appendChild(my_awesome_script);
+        //var my_awesome_script = document.createElement('script');
+        //my_awesome_script.setAttribute("id", "QChatparams")
+        iframe.src = '##URL##';
+		// Set iframe styles (optional)
+		iframe.style.position = 'fixed';
+		iframe.style.bottom = '0';
+		iframe.style.right = '0';
+		iframe.style.width = '380px';
+		iframe.style.height = '480px';
+		iframe.style.border = 'none';
+		iframe.style.zIndex = '99999';
+        document.body.appendChild(iframe);
     })();`;
-
+ 
   const downloadScript = async () => {
     const urlWithToken = (await getRedirectUrl(chatbotURL)) || "";
-
+ 
     if (urlWithToken == "") return null;
-
+ 
     //Replace string ##URL## with urlWithToken in scriptContent
     const scriptContentWithToken = scriptContent.replace(
       "##URL##",
@@ -61,20 +69,20 @@ export default async function DownloadTamperMonekyScript({
     a.click();
     URL.revokeObjectURL(url);
   };
-
+ 
   return (
-    <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <button onClick={downloadScript}>
-            <ArrowDownTrayIcon className="h-4 inline-flex" />
-          </button>
-        </TooltipTrigger>
-        <TooltipContent>
-          <p>😇 Download Tampermonkey Script to embed Chatbot in website!</p>
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
+<TooltipProvider>
+<Tooltip>
+<TooltipTrigger asChild>
+<button onClick={downloadScript}>
+<ArrowDownTrayIcon className="h-4 inline-flex" />
+</button>
+</TooltipTrigger>
+<TooltipContent>
+<p>😇 Download Tampermonkey Script to embed Chatbot in website!</p>
+</TooltipContent>
+</Tooltip>
+</TooltipProvider>
   );
 }
 async function getRedirectUrl(url) {
@@ -82,19 +90,19 @@ async function getRedirectUrl(url) {
     const response = await fetch(url + "&redirectUrl=true", {
       method: "GET",
     });
-
+ 
     const data = await response.json();
-
+ 
     return formatURL(data.redirectUrl);
   } catch (error) {
     console.error("Error:", error);
     return null;
   }
 }
-
+ 
 function formatURL(url) {
   //Retrieve the URL hostname, queryparams and add serve.js as path before '?'
   const parsedUrl = new URL(url);
-  const formattedUrl = `${parsedUrl.origin}${parsedUrl.pathname}serve.js${parsedUrl.search}`;
+  const formattedUrl = `${parsedUrl.origin}${parsedUrl.pathname}${parsedUrl.search}`;
   return formattedUrl;
 }
