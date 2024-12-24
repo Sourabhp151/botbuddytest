@@ -42,7 +42,7 @@ export default function QChatListRequests({
   const client = generateClient<Schema>();
   const queryClient = useQueryClient();
   const { isAdmin, emailId } = useUser();
-  const [userSpecificView, setUserSpecificView] = useState(!isAdmin);
+  const userSpecificView = !isAdmin; // Always restrict non-admin users to their own requests
   const [isProcessing, setIsProcessing] = useState(false);
 
   const [totalIndexedPages, setTotalIndexedPages] = useState(0);
@@ -174,12 +174,9 @@ export default function QChatListRequests({
         <div className="flex text-xl">List of Submitted Forms</div>
         <div className="flex items-center">
           {isAdmin && (
-            <Button
-              className="mr-4"
-              onClick={() => setUserSpecificView(!userSpecificView)}
-            >
-              {userSpecificView ? "Show All Requests" : "Show My Requests"}
-            </Button>
+            <div className="mr-4 text-sm text-gray-500">
+              Viewing all requests (Admin)
+            </div>
           )}
           <div className="text-md">
             Ongoing PoCs: {submissions?.length}, Indexing Consumption:{" "}
