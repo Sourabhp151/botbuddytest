@@ -42,7 +42,7 @@ export default function QChatListRequests({
   const client = generateClient<Schema>();
   const queryClient = useQueryClient();
   const { isAdmin, emailId } = useUser();
-  const userSpecificView = !isAdmin; // Always restrict non-admin users to their own requests
+  const [userSpecificView, setUserSpecificView] = useState(!isAdmin);
   const [isProcessing, setIsProcessing] = useState(false);
 
   const [totalIndexedPages, setTotalIndexedPages] = useState(0);
@@ -174,13 +174,21 @@ export default function QChatListRequests({
         <div className="flex text-xl">List of Submitted Forms</div>
         <div className="flex items-center">
           {isAdmin && (
-            <div className="mr-4 text-sm text-gray-500">
-              Viewing all requests (Admin)
-            </div>
+            <Button
+              className="mr-4"
+              onClick={() => setUserSpecificView(!userSpecificView)}
+            >
+              {userSpecificView ? "Show All Requests" : "Show My Requests"}
+            </Button>
           )}
           <div className="text-md">
             Ongoing PoCs: {submissions?.length}, Indexing Consumption:{" "}
             {totalIndexedPages ? Math.round(totalIndexedPages) : 0}k / 100K
+            {totalIndexedPages > 5 && (
+              <div className="text-red-500 font-bold">
+                Warning: Indexing limit has been increased!
+              </div>
+            )}
           </div>
         </div>
       </div>
