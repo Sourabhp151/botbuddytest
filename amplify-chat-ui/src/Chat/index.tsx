@@ -109,20 +109,6 @@ export default function Chat({
     if (event instanceof Object) {
       event.preventDefault()
     }
-    
-    // Check if message count has reached the limit
-    if (messages.length >= 5000) {
-      const limitMessage: MessageType[] = [
-        ...messages,
-        { 
-          role: "assistant", 
-          content: "You have reached the maximum limit of 5000 messages in this conversation. Please clear the conversation to continue.", 
-          lang: "en" 
-        }
-      ];
-      setMessages(limitMessage);
-      return;
-    }
 
     let defLang = translationLanguage === "" ? "en" : translationLanguage
 
