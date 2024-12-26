@@ -184,7 +184,7 @@ export default function QChatListRequests({
           <div className="text-md">
             Ongoing PoCs: {submissions?.length}, Indexing Consumption:{" "}
             {totalIndexedPages ? Math.round(totalIndexedPages) : 0}k / 100K
-            {totalIndexedPages > 5 && (
+            {totalIndexedPages > 10 && (
               <div className="text-red-500 font-bold">
                 Warning: Indexing limit has been increased!
               </div>
