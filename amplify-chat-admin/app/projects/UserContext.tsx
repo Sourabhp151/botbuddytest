@@ -21,7 +21,7 @@ function reducer(state, action) {
                 isLoggedIn: true,
                 user: action.payload.user,
                 emailId: action.payload.emailId,
-                isAdmin: action.payload.emailId == "akhil.kandari@redingtongroup.com" || action.payload.emailId == "sourabh.hedge@redingtongroup.com"
+                isAdmin: action.payload.emailId == "akhil.kandari@redingtongroup.com"
             }
         case 'LOGOUT':
             handleSignOut();
